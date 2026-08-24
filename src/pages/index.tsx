@@ -1,115 +1,94 @@
-import Image from "next/image";
-import localFont from "next/font/local";
+import type { NextPage } from 'next';
+import { useState } from 'react';
+import { patients } from '../data/patients';
+import PatientSelector from '../components/PatientSelector';
+import PatientHeader from '../components/PatientHeader';
+import VitalCards from '../components/VitalCards';
+import ECGWaveform from '../components/ECGWaveform';
+import VitalTrends from '../components/VitalTrends';
+import MedicationSchedule from '../components/MedicationSchedule';
+import LabResults from '../components/LabResults';
+import AlertPanel from '../components/AlertPanel';
+import FluidBalance from '../components/FluidBalance';
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+const Home: NextPage = () => {
+  const [selectedIdx, setSelectedIdx] = useState(0);
+  const patient = patients[selectedIdx];
 
-export default function Home() {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-US', { hour12: false });
+  const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+
   return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/pages/index.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="h-screen w-screen flex flex-col bg-bg-primary overflow-hidden">
+      {/* Top Status Bar */}
+      <header className="h-10 bg-bg-card border-b border-bg-border flex items-center justify-between px-4 shrink-0">
+        <div className="flex items-center gap-4">
+          <span className="text-vital-green font-bold text-sm tracking-wider">ICU</span>
+          <span className="text-vital-blue text-xs">PATIENT MONITOR</span>
+          <span className="text-gray-600 text-[10px]">|</span>
+          <span className="text-gray-400 text-[10px]">{patients.length} BEDS ACTIVE</span>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+        <div className="flex items-center gap-4 text-[10px] text-gray-500">
+          <span>NETWORK: <span className="text-vital-green">ONLINE</span></span>
+          <span>EMR: <span className="text-vital-green">CONNECTED</span></span>
+          <span>ALARM: <span className="text-vital-green">ARMED</span></span>
+          <span>{dateStr}</span>
+          <span className="text-white font-mono text-xs">{timeStr}</span>
+        </div>
+      </header>
+
+      <div className="flex flex-1 min-h-0">
+        {/* Left Sidebar - Patient Selector */}
+        <aside className="w-56 bg-bg-card border-r border-bg-border shrink-0 flex flex-col">
+          <PatientSelector
+            patients={patients}
+            selectedIdx={selectedIdx}
+            onSelect={setSelectedIdx}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 flex flex-col min-w-0 p-2 gap-2">
+          {/* Patient Header */}
+          <PatientHeader patient={patient} />
+
+          {/* Row 1: ECG + Vital Cards */}
+          <div className="flex gap-2 flex-1 min-h-0">
+            {/* ECG Waveform - takes more space */}
+            <div className="flex-[3] min-w-0">
+              <ECGWaveform patientId={patient.id} heartRate={patient.vitals.hr.value} />
+            </div>
+            {/* Vital Cards - right side */}
+            <div className="w-80 shrink-0">
+              <VitalCards vitals={patient.vitals} />
+            </div>
+          </div>
+
+          {/* Row 2: Trends + Meds + Labs + Alerts + Fluids */}
+          <div className="flex gap-2" style={{ height: '38%' }}>
+            <div className="flex-1 min-w-0">
+              <VitalTrends vitals={patient.vitals} />
+            </div>
+            <div className="flex-1 min-w-0 flex flex-col gap-2">
+              <div className="flex-1 min-h-0">
+                <AlertPanel alerts={patient.alerts} />
+              </div>
+              <div className="flex-1 min-h-0">
+                <FluidBalance fluids={patient.fluids} />
+              </div>
+            </div>
+            <div className="flex-1 min-w-0">
+              <LabResults labs={patient.labs} />
+            </div>
+            <div className="w-72 shrink-0">
+              <MedicationSchedule medications={patient.medications} />
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   );
-}
+};
+
+export default Home;
