@@ -2,26 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html, body {
+  background-color: #060b18;
+  color: #c8d6e5;
+  font-family: 'JetBrains Mono', monospace;
+  overflow: hidden;
+  height: 100vh;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d1526;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1a2744;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2a3f66;
+}
+
+@layer components {
+  .icu-panel {
+    @apply bg-bg-card border border-bg-border rounded-lg;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03);
   }
-}
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
+  .icu-panel-header {
+    @apply px-4 py-2 border-b border-bg-border flex items-center justify-between;
+    background: linear-gradient(180deg, rgba(26,39,68,0.5) 0%, transparent 100%);
+  }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .vital-value {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  .vital-label {
+    @apply text-[10px] uppercase tracking-[0.2em] text-gray-500;
+  }
+
+  .alarm-border-critical {
+    border-color: #ff1744;
+    box-shadow: 0 0 15px rgba(255,23,68,0.3), inset 0 0 15px rgba(255,23,68,0.05);
+  }
+
+  .alarm-border-warning {
+    border-color: #ffab00;
+    box-shadow: 0 0 10px rgba(255,171,0,0.2);
+  }
+
+  .ecg-grid {
+    background-image: 
+      linear-gradient(rgba(0,230,118,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,230,118,0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
 }
